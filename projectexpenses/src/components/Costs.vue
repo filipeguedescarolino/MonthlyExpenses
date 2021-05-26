@@ -1,7 +1,6 @@
 <template >
   <div>
     <h2> Add your recent incomes and expenses </h2>
-    
     <div class="d-flex justify-content-around mb-3 p-2 border border-secondary" >
       <div> 
         <button type="button" 
