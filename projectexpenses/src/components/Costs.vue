@@ -1,9 +1,17 @@
 <template >
   <div>
-
+    <h2> Add your recent incomes and expenses </h2>
+    
     <div class="d-flex justify-content-around mb-3 p-2 border border-secondary" >
       <div> 
-        <button type="button" class="btn btn-success">Check all income</button>
+        <button type="button" 
+          class="btn btn-success" 
+          v-if="incomeArray.length > 0"   
+          data-bs-toggle="modal" 
+          data-bs-target="#exampleModal">
+
+          Check all income
+        </button>
       </div>
 
       <div>
@@ -17,7 +25,14 @@
       </div>
 
       <div> 
-        <button type="button" class="btn btn-danger">Check all expenses</button>  
+        <button type="button" 
+          class="btn btn-danger" 
+          v-if="expenseArray.length > 0" 
+          data-bs-toggle="modal" 
+          data-bs-target="#exampleModalExpenses">
+
+          Check all expenses
+        </button>  
       </div>     
     </div>
 
@@ -61,7 +76,7 @@
 
               <div class="input-group p-1">
                 <span class="input-group-text" style="min-width: 106px;">Amount</span>
-                <input type="number" aria-label="Amount" required class="form-control" v-model="amount">
+                <input type="number" aria-label="Amount" required class="form-control" v-model.number="amount">
                 
               </div>
 
@@ -81,13 +96,11 @@
       </div>
     </div>
     
-    <button v-if="allTransactions.length > 0" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal6">
-  Launch demo modal
-    </button>
+    
 
-<!-- Modal -->
-    <div class="modal fade" id="exampleModal6" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" v-if="allTransactions.length > 0">
+    <!-- Modal income-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" >
         
         <div class="modal-content">
           
@@ -97,23 +110,95 @@
               </p>
             </div>
             <div> 
-              <!-- <h5 class="modal-title badge bg-danger" id="exampleModalLabel" style="font-size: 20px;">Report of {{allTransactions[0].category}} </h5> -->
+              <h5 class="modal-title badge bg-success" id="exampleModalLabel" style="font-size: 20px;">Report of all Incomes </h5>
             </div>
             <div> 
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>            
           </div>
-          <div class="modal-body">
-             
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+          <div class="modal-body" v-for="(income,index) in incomeArray" :key="index">
+            <div class="border d-flex align-items-center  justify-content-center" style="padding: 1px;" > 
+
+              <div class="col-lg-12">
+                  <ul class="list-group  flex-row justify-content-between align-items-center">                
+                      <li  class="list-group-item btn btn-danger text-muted" style="font-size: 20px">   {{income.date}} </li>                
+                      <li  class="list-group-item badge bg-success" style="font-size: 20px">   {{income.description}} </li>
+                      <li  class="list-group-item disabled" style="color: red">   {{income.amount}} Euros </li>                                 
+                  </ul>
+              </div>
+            </div>
+            <div>
+              <div style="border: 2px solid blue"> 
+                
+              </div>
+            </div>
           </div>
         </div>
+      
+      </div>
+       
+    </div>
+
+    <!-- Modal expenses -->
+    <div class="modal fade" id="exampleModalExpenses" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" >
+        
+        <div class="modal-content">
+          
+          <div class="modal-header">
+            <div> 
+              <p> 
+              </p>
+            </div>
+            <div> 
+              <h5 class="modal-title badge bg-danger" id="exampleModalLabel" style="font-size: 20px;">Report of all Expenses </h5>
+            </div>
+            <div> 
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>            
+          </div>
+          <div class="modal-body" v-for="(expense,index) in expenseArray" :key="index">
+            <div class="border d-flex align-items-center  justify-content-center align-items-center"  style="padding: 1px;" > 
+
+              <div class="col-lg-12 ">
+                  <ul class="list-group  flex-row justify-content-between align-items-center"> 
+                      <li  class="list-group-item btn btn-danger text-muted" style="font-size: 20px">   {{expense.date}} </li>                
+                      <li  class="list-group-item badge bg-danger" style="font-size: 20px">   {{expense.description}} </li>
+                      <li  class="list-group-item disabled" style="color: red">   {{expense.amount}} Euros </li>                     
+                  </ul>
+              </div>
+            </div>
+            <div>
+              <div style="border: 2px solid blue"> 
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      
       </div>
     </div>
 
+    <!-- modal report -->
+
+    <div class="modal fade" id="exampleModalReport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Report</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h1 v-if="sumIncomes > sumExpenses"> Well done! <span style="color:blue;"> your bank account is increasing </span> </h1>
+        <h1 v-if="sumIncomes <= sumExpenses"> Tip: <span style="color:red;">Change your job! you are getting poor everyday</span>  </h1>
+        
+      </div>
+      <div class="modal-footer">
+        
+      </div>
+    </div>
+  </div>
+</div>
     
 
     <!-- <div>
@@ -152,12 +237,41 @@
       <label for="floatingSelect">Choose the Type</label>
     </div> -->
 
+    <div class="mt-3 d-flex flex-column justify-content-start" style="">
+      <div> 
+        <h6 class="badge bg-primary"> Saldo Inicial: <span v-if="moneyStart"> {{moneyStart}} Euros</span> </h6>
+      </div>
+
+      <div> 
+        <h6 class="badge bg-success"> Total Income: <span v-if="sumIncomes"> {{sumIncomes}} Euros</span> </h6>
+      </div>
+
+      <div> 
+        <h6 class="badge bg-danger"> Total Expenses: <span v-if="sumExpenses"> {{sumExpenses}} Euros</span> </h6>
+      </div>
+      
+      <button type="button" 
+        class="btn btn-success"  
+        data-bs-toggle="modal" 
+        data-bs-target="#exampleModalReport"> 
+
+        Report 
+      </button>
+
+    
+    </div>
+
+    
+
     
     
   </div>
 </template>
 
 <script>
+
+
+
 export default {
   data () {
     return {
@@ -166,7 +280,7 @@ export default {
       category: "",
       type: "",
       description:  "",
-      amount: "",
+      amount: 0,
       date: "",
         
       
@@ -175,16 +289,62 @@ export default {
     }
   },
 
+
+  computed: {
+    
+    incomeArray: function () {
+      return this.allTransactions.filter((income) => income.category == "income")      
+    },
+
+    expenseArray: function () {
+      return this.allTransactions.filter((expense) => expense.category == "expenses")      
+    },
+
+    
+
+    sumExpenses: function () {
+      
+      let a = this.expenseArray.map(a => a.amount);
+      let acumuladorExpense = 0
+      for(let i = 0; i< a.length; i++) {
+        acumuladorExpense += a[i]
+      }
+      return acumuladorExpense
+    },
+    
+    sumIncomes: function () {
+      
+
+      let a = this.incomeArray.map(a => a.amount);
+      let acumuladorIncome = 0
+      for(let i = 0; i< a.length; i++) {
+        acumuladorIncome += a[i]
+      }
+      return acumuladorIncome
+    },
+  },
+    
   methods: {
     addToAllTransactions () {
+
+      if (!this.category || !this.type || !this.description || !this.amount || !this.date ) {
+        this.$swal(
+          'Tem de preencher todos os campos!!'         
+        )
+        return
+      }
 
       let length = this.allTransactions.length + 1    
       this.allTransactions.push({ id: length, category: this.category, type: this.type, description: this.description, amount: this.amount, date: this.date})
       this.category = "",
       this.type = "",
       this.description = "",
-      this.amount = "",
+      this.amount = 0,
       this.date = ""
+
+      this.$swal(
+          'Adicionado com sucesso',                    
+        )
     }
   },
 
